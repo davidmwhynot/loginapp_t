@@ -1,0 +1,130 @@
+db.createUser({
+  user:"brad",
+  pwd:"1234",
+  roles: [ "readWrite", "dbAdmin" ]
+});
+> db.customers.find();
+> db
+test
+> use mycustomers
+switched to db mycustomers
+> db.customers.find();
+{ "_id" : ObjectId("59d93884966f3d3392178ecb"), "first_name" : "John", "last_name" : "Doe" }
+{ "_id" : ObjectId("59d9391a966f3d3392178ecc"), "first_name" : "Steven", "last_name" : "Smith" }
+{ "_id" : ObjectId("59d9391a966f3d3392178ecd"), "first_name" : "Joan", "last_name" : "Johnson", "gender" : "female" }
+> db.customers.find().pretty();
+{
+        "_id" : ObjectId("59d93884966f3d3392178ecb"),
+        "first_name" : "John",
+        "last_name" : "Doe"
+}
+{
+        "_id" : ObjectId("59d9391a966f3d3392178ecc"),
+        "first_name" : "Steven",
+        "last_name" : "Smith"
+}
+{
+        "_id" : ObjectId("59d9391a966f3d3392178ecd"),
+        "first_name" : "Joan",
+        "last_name" : "Johnson",
+        "gender" : "female"
+}
+> db.customers.update({first_name:"John"},{first_name:"John",last_name:"Doe",gender:"male"});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.customers.find().pretty();
+{
+        "_id" : ObjectId("59d93884966f3d3392178ecb"),
+        "first_name" : "John",
+        "last_name" : "Doe",
+        "gender" : "male"
+}
+{
+        "_id" : ObjectId("59d9391a966f3d3392178ecc"),
+        "first_name" : "Steven",
+        "last_name" : "Smith"
+}
+{
+        "_id" : ObjectId("59d9391a966f3d3392178ecd"),
+        "first_name" : "Joan",
+        "last_name" : "Johnson",
+        "gender" : "female"
+}
+> db.customers.update({first_name:"Steven"},{$set:{gender:"male"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.customers.find().pretty();
+{
+        "_id" : ObjectId("59d93884966f3d3392178ecb"),
+        "first_name" : "John",
+        "last_name" : "Doe",
+        "gender" : "male"
+}
+{
+        "_id" : ObjectId("59d9391a966f3d3392178ecc"),
+        "first_name" : "Steven",
+        "last_name" : "Smith",
+        "gender" : "male"
+}
+{
+        "_id" : ObjectId("59d9391a966f3d3392178ecd"),
+        "first_name" : "Joan",
+        "last_name" : "Johnson",
+        "gender" : "female"
+}
+> db.customers.update({first_name:"Steven"},{$set:{age:45}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.customers.update({first_name:"Steven"},{$inc:{age:5}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.customers.find().pretty();
+{
+        "_id" : ObjectId("59d93884966f3d3392178ecb"),
+        "first_name" : "John",
+        "last_name" : "Doe",
+        "gender" : "male"
+}
+{
+        "_id" : ObjectId("59d9391a966f3d3392178ecc"),
+        "first_name" : "Steven",
+        "last_name" : "Smith",
+        "gender" : "male",
+        "age" : 50
+}
+{
+        "_id" : ObjectId("59d9391a966f3d3392178ecd"),
+        "first_name" : "Joan",
+        "last_name" : "Johnson",
+        "gender" : "female"
+}
+> db.customers.update({first_name:"steven"},{$unset:{age:1}});
+
+
+
+db.customers.update({first_name:"Marry"},{first_name:"Marry",last_name:"Samson"},{upsert:true});
+
+db.customers.update({first_name:"Steven"},{$rename:{"gender":"sex"}});
+
+db.customers.remove({first_name:"Steven"});
+
+db.customers.remove({first_name:"Steven"},{justOne: true});
+
+
+
+db.customers.find({first_name:"Sharon"});
+
+db.customers.find({$or:[{first_name:"Sharon"},{first_name:"Troy"}]});
+
+db.customers.find({age:{$lt:40}}); // return customers with: age is less than 40
+
+db.customers.find({"address.city":"Boston"});
+
+db.customers.find({memberships:"mem1"});
+
+db.customers.find().sort({last_name:1}).pretty(); // 1 = ascending order, -1 = descending
+
+db.customers.find().count();
+
+db.customers.find(gender:"male").count();
+
+db.customers.find().limit(4).sort({last_name:1});
+
+
+db.customers.find().forEach(function(doc){print("Customer Name: " + doc.first_name)});
